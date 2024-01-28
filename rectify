@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Specify the directories to compare
+source_dir="/root/alx-system_engineering-devops/0x03-shell_variables_expansions"
+target_dir="/root/alx-system_engineering-devops/0x04-loops_conditions_and_parsing"
+
+# Check if the source directory exists
+if [ ! -d "$source_dir" ]; then
+    echo "Source directory does not exist: $source_dir"
+    exit 1
+fi
+
+# Check if the target directory exists
+if [ ! -d "$target_dir" ]; then
+    echo "Target directory does not exist: $target_dir"
+    exit 1
+fi
+
+echo "Comparing directories..."
+echo "Source directory: $source_dir"
+echo "Target directory: $target_dir"
+echo "====================================="
+
+# Iterate through files in the source directory
+while IFS= read -r -d '' source_file; do
+    relative_path="${source_file#$source_dir}"
+    target_file="$target_dir$relative_path"
+
+    # Check if the file exists in the target directory
+    if [ -e "$target_file" ]; then
+        echo "Duplicate file found: $relative_path"
+        echo "Deleting from target directory..."
+        rm -f "$target_file"
+        echo "Deleted: $relative_path"
+        echo "-------------------------------------"
+    fi
+done < <(find "$source_dir" -type f -print0)
+
+echo "Comparison and deletion completed."
+
