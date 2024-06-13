@@ -1,0 +1,1 @@
+ configuring aplication serc=ver 
